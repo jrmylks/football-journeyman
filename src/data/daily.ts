@@ -1,4 +1,3 @@
-import { players } from './players'
 import type { Player } from './players'
 
 function seededRng(seed: number) {
@@ -28,7 +27,7 @@ export function getDailyDisplayDate(): string {
 }
 
 // Same 11 players for everyone today: 3×L1, 3×L2, 2×L3, 2×L4, 1×L5
-export function getDailyPlayers(): Player[] {
+export function getDailyPlayers(players: Player[]): Player[] {
   const d = new Date()
   const seed = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate()
   const rng = seededRng(seed)

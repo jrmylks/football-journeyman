@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from 'react'
-import { players } from './data/players'
+import type { Player } from './data/players'
 import { saveScore, updateStats } from './data/leaderboard'
 import { getDailyPlayers, getDailyDateKey, saveDailyResult } from './data/daily'
 import LandingScreen from './LandingScreen'
 import Leaderboard from './Leaderboard'
 import Stats from './Stats'
+import { supabase } from './lib/supabase'
 import './App.css'
 
 const WINS_TO_ADVANCE: Record<number, number> = { 1: 3, 2: 3, 3: 2, 4: 2, 5: 1 }
@@ -50,6 +51,16 @@ interface GameOverState {
 }
 
 export default function App() {
+  const [players, setPlayers] = useState<Player[]>([])
+  const [loadingPlayers, setLoadingPlayers] = useState(true)
+
+  useEffect(() => {
+    supabase.from('players').select('*').then(({ data, error }) => {
+      if (!error && data) setPlayers(data as Player[])
+      setLoadingPlayers(false)
+    })
+  }, [])
+
   const [screen, setScreen] = useState<Screen>('landing')
   const [username, setUsername] = useState('Anonymous')
   const [isDaily, setIsDaily] = useState(false)
@@ -81,7 +92,7 @@ export default function App() {
     const pool = players.filter((p) => p.level === lvl && !usedIds.current.has(p.id))
     if (pool.length === 0) {
       players.filter((p) => p.level === lvl).forEach((p) => usedIds.current.delete(p.id))
-      return pickRandom(players.filter((p) => p.level === lvl))
+      return pickRandom(players.filter((p) => p.level === (lvl as 1|2|3|4|5)))
     }
     return pickRandom(pool)
   }
@@ -100,7 +111,7 @@ export default function App() {
     usedIds.current = new Set()
 
     if (daily) {
-      const queue = getDailyPlayers()
+      const queue = getDailyPlayers(players)
       dailyQueue.current = queue
       dailyIndex.current = 0
       setPlayer(queue[0])
@@ -223,6 +234,19 @@ export default function App() {
       setShareCopied(true)
       setTimeout(() => setShareCopied(false), 2500)
     })
+  }
+
+  if (loadingPlayers) {
+    return (
+      <div className="app">
+        <div className="badge-header">
+          <div className="badge-title">★ THE FOOTBALL JOURNEYMAN ★</div>
+        </div>
+        <div className="card" style={{ textAlign: 'center', padding: '2rem' }}>
+          Loading players...
+        </div>
+      </div>
+    )
   }
 
   if (screen === 'landing') {
