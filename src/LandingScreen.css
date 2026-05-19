@@ -1,0 +1,231 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&display=swap');
+
+.landing-app {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  gap: 0;
+  font-family: 'Oswald', 'Impact', sans-serif;
+  position: relative;
+  overflow: hidden;
+  background: #e8d5a0;
+}
+
+/* ── Retro halftone background ── */
+.landing-app::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    /* halftone dot layer */
+    radial-gradient(circle, #b5892a 1.2px, transparent 1.2px);
+  background-size: 14px 14px;
+  opacity: 0.35;
+  z-index: 0;
+}
+
+.landing-app::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    /* faded radial vignette — darkens edges like an old print */
+    radial-gradient(ellipse at center, transparent 40%, rgba(80, 40, 0, 0.55) 100%);
+  z-index: 0;
+}
+
+/* Lift all direct children above the background layers */
+.landing-app > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Ticker ── */
+.ticker-wrap {
+  width: 100%;
+  max-width: 400px;
+  overflow: hidden;
+  background: #111;
+  border: 4px solid #111;
+  border-bottom: none;
+  padding: 8px 0;
+  margin-bottom: 0;
+}
+
+.ticker-track {
+  display: flex;
+  gap: 0;
+  white-space: nowrap;
+  animation: ticker-scroll 18s linear infinite;
+}
+
+.ticker-item {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #f7c948;
+  letter-spacing: 1px;
+  padding: 0 28px;
+  flex-shrink: 0;
+}
+
+@keyframes ticker-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.landing-badge {
+  background: #f7c948;
+  border: 4px solid #111;
+  border-bottom: none;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  padding: 20px 20px 16px;
+  box-shadow: 6px 6px 0 #111;
+}
+
+.landing-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #111;
+  letter-spacing: 1px;
+}
+
+.landing-sub {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #555;
+  letter-spacing: 2px;
+  margin-top: 6px;
+}
+
+.landing-card {
+  background: #fff;
+  border: 4px solid #111;
+  width: 100%;
+  max-width: 400px;
+  padding: 28px;
+  box-shadow: 6px 6px 0 #111;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.landing-btn {
+  width: 100%;
+  padding: 16px;
+  border: 3px solid #111;
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: transform 0.08s, box-shadow 0.08s;
+  box-shadow: 4px 4px 0 #111;
+}
+
+.landing-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 #111;
+}
+
+.landing-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0 #111;
+}
+
+.landing-btn.primary {
+  background: #f7c948;
+  color: #111;
+}
+
+.landing-btn.secondary {
+  background: #111;
+  color: #f7c948;
+  font-size: 1rem;
+}
+
+.landing-btn.daily {
+  background: #1a5a9a;
+  color: #fff;
+  border-color: #1a5a9a;
+  box-shadow: 4px 4px 0 #0d3060;
+  line-height: 1.3;
+  font-size: 1.1rem;
+}
+
+.landing-btn.daily:hover {
+  box-shadow: 6px 6px 0 #0d3060;
+}
+
+.landing-btn.daily.done {
+  background: #555;
+  border-color: #555;
+  box-shadow: 4px 4px 0 #333;
+  cursor: default;
+  opacity: 0.8;
+}
+
+.landing-btn.daily.done:hover {
+  transform: none;
+  box-shadow: 4px 4px 0 #333;
+}
+
+.daily-date {
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 1px;
+  opacity: 0.85;
+}
+
+.landing-divider {
+  text-align: center;
+  font-size: 0.8rem;
+  color: #888;
+  letter-spacing: 2px;
+  font-weight: 600;
+}
+
+.landing-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.landing-streak { color: #c05800; }
+.landing-best   { color: #1a7a3a; }
+
+.landing-bottom {
+  display: flex;
+  gap: 8px;
+}
+
+.landing-bottom .landing-btn {
+  flex: 1;
+  font-size: 0.85rem;
+  padding: 12px 8px;
+}
+
+.landing-input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 3px solid #111;
+  font-family: 'Oswald', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 1px;
+  color: #111;
+  background: #f9f9f9;
+  outline: none;
+  box-shadow: 4px 4px 0 #111;
+}
+
+.landing-input:focus {
+  background: #fffde7;
+  border-color: #f7c948;
+}
