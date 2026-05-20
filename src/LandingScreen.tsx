@@ -3,6 +3,40 @@ import { loadStats } from './data/leaderboard'
 import { getDailyDisplayDate, hasDoneToday, getTodayResult } from './data/daily'
 import './LandingScreen.css'
 
+function InstructionsModal({ onClose }: { onClose: () => void }) {
+  return (
+    <div className="instructions-overlay" onClick={onClose}>
+      <div className="instructions-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="instructions-title">HOW TO PLAY</div>
+        <div className="instructions-body">
+          <p>Guess the football player from their club career.</p>
+          <ul>
+            <li>You start with <strong>3 clubs</strong> shown and a <strong>15 second timer</strong>.</li>
+            <li>Type the player's <strong>full name or surname</strong> and hit GUESS.</li>
+            <li>A correct guess earns points — the faster and fewer clubs shown, the more you score.</li>
+            <li>You have <strong>2 lives</strong>. A wrong guess or running out of time costs a life.</li>
+            <li>Hit <strong>REVEAL NEXT CLUB</strong> to see another club and add 10 seconds — but your potential points drop.</li>
+            <li>Win enough rounds to advance through <strong>5 levels</strong> of difficulty.</li>
+            <li>Level 1 needs 3 wins, levels 2–3 need 3 wins, levels 4–5 need fewer — can you complete all 5?</li>
+          </ul>
+          <div className="instructions-modes">
+            <div><strong>▶ FREE PLAY</strong> — random players, play as many times as you like.</div>
+            <div><strong>📅 DAILY CHALLENGE</strong> — one fixed set of players per day, same for everyone. Compare scores on the leaderboard!</div>
+          </div>
+          <div className="instructions-levels">
+            <div><strong>Level 1</strong> — Global icons</div>
+            <div><strong>Level 2</strong> — Famous players, trickier paths</div>
+            <div><strong>Level 3</strong> — Well-known, needs thinking</div>
+            <div><strong>Level 4</strong> — Solid pros, obscure careers</div>
+            <div><strong>Level 5</strong> — True journeymen. Good luck.</div>
+          </div>
+        </div>
+        <button className="instructions-close" onClick={onClose}>✕ CLOSE</button>
+      </div>
+    </div>
+  )
+}
+
 interface Props {
   onFreePlay: (username: string) => void
   onDailyChallenge: (username: string) => void
@@ -18,6 +52,7 @@ export default function LandingScreen({ onFreePlay, onDailyChallenge, onLeaderbo
   const [username, setUsername] = useState(
     () => localStorage.getItem('fj_username') ?? ''
   )
+  const [showInstructions, setShowInstructions] = useState(false)
 
   const stats = loadStats()
   const todayResult = getTodayResult()
@@ -33,6 +68,7 @@ export default function LandingScreen({ onFreePlay, onDailyChallenge, onLeaderbo
 
   return (
     <div className="landing-app">
+      {showInstructions && <InstructionsModal onClose={() => setShowInstructions(false)} />}
       <div className="ticker-wrap">
         <div className="ticker-track">
           {tickerItems.map((name, i) => (
@@ -91,6 +127,9 @@ export default function LandingScreen({ onFreePlay, onDailyChallenge, onLeaderbo
           </button>
           <button className="landing-btn secondary" onClick={onStats}>
             📊 MY STATS
+          </button>
+          <button className="landing-btn secondary" onClick={() => setShowInstructions(true)}>
+            ❓ HOW TO PLAY
           </button>
         </div>
       </div>
