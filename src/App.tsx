@@ -6,6 +6,7 @@ import LandingScreen from './LandingScreen'
 import Leaderboard from './Leaderboard'
 import Stats from './Stats'
 import { supabase } from './lib/supabase'
+import { trackGameStarted, trackLevelUp, trackCorrectGuess, trackWrongGuess, trackGameOver, trackRevealClub } from './lib/analytics'
 import './App.css'
 
 const WINS_TO_ADVANCE: Record<number, number> = { 1: 3, 2: 3, 3: 2, 4: 2, 5: 1 }
@@ -120,6 +121,7 @@ export default function App() {
       usedIds.current.add(first.id)
       setPlayer(first)
     }
+    trackGameStarted(daily ? 'daily' : 'free')
     setScreen('game')
   }
 
@@ -143,6 +145,7 @@ export default function App() {
     saveScore({ username, score: currentScore, levelReached: currentLevel, won, mode: isDaily ? 'daily' : 'free' })
     updateStats(currentScore, won)
     if (isDaily) saveDailyResult(currentScore, currentLevel, won)
+    trackGameOver(currentScore, currentLevel, won, isDaily ? 'daily' : 'free')
     setGameOver({ score: currentScore, level: currentLevel, won, correctAnswer: currentPlayer.name, wasRevealed })
     setScreen('game-over')
   }
@@ -184,6 +187,7 @@ export default function App() {
       setScore(newScore)
       setWinsThisLevel(newWins)
       setResult('correct')
+      trackCorrectGuess(level, clubsShown, timeLeft, pts)
 
       const needed = WINS_TO_ADVANCE[level]
       if (newWins >= needed) {
@@ -191,6 +195,7 @@ export default function App() {
           setTimeout(() => triggerGameOver(newScore, level, true, player, true), 1200)
         } else {
           const nextLevel = level + 1
+          trackLevelUp(nextLevel)
           setLevel(nextLevel)
           setWinsThisLevel(0)
           setTimeout(() => loadNextPlayer(nextLevel), 1200)
@@ -201,6 +206,7 @@ export default function App() {
     } else {
       const remaining = lives - 1
       setLives(remaining)
+      trackWrongGuess(level)
       if (remaining <= 0) {
         triggerGameOver(score, level, false, player)
       } else {
@@ -212,6 +218,7 @@ export default function App() {
   }
 
   function handleReveal() {
+    trackRevealClub(level, clubsShown + 1)
     setClubsShown((n) => n + 1)
     setResult(null)
     setTimeLeft((t) => Math.min(t + TIMER_BONUS, TIMER_MAX))
