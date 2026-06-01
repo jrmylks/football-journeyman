@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { loadDaily, loadWeekly, loadGlobalDaily } from './data/leaderboard'
+import { loadDaily, loadWeekly, loadGlobalWeekly } from './data/leaderboard'
 import type { ScoreEntry } from './data/leaderboard'
 import './Leaderboard.css'
 
@@ -15,7 +15,7 @@ export default function Leaderboard({ onBack }: Props) {
   const [loadingGlobal, setLoadingGlobal] = useState(true)
 
   useEffect(() => {
-    loadGlobalDaily().then((data) => {
+    loadGlobalWeekly().then((data) => {
       setGlobalEntries(data)
       setLoadingGlobal(false)
     })
@@ -57,7 +57,7 @@ export default function Leaderboard({ onBack }: Props) {
           <div className="lb-empty">Loading...</div>
         ) : entries.length === 0 ? (
           <div className="lb-empty">
-            {tab === 'global' ? 'No daily scores yet today. Be the first!' : 'No scores yet. Play a game!'}
+            {tab === 'global' ? 'No scores in the last 7 days. Be the first!' : 'No scores yet. Play a game!'}
           </div>
         ) : (
           <ol className="lb-list">

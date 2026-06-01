@@ -38,23 +38,32 @@ export async function saveScoreGlobal(entry: Omit<ScoreEntry, 'date'>) {
   })
 }
 
-export async function loadGlobalDaily(): Promise<ScoreEntry[]> {
+export async function loadGlobalWeekly(): Promise<ScoreEntry[]> {
   const { supabase } = await import('../lib/supabase')
-  const today = new Date().toISOString().slice(0, 10)
+  const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10)
   const { data } = await supabase
     .from('scores')
-    .select('*')
-    .eq('date', today)
+    .select('username, score, level_reached, won, date')
+    .gte('date', weekAgo)
     .order('score', { ascending: false })
-    .limit(20)
-  return (data ?? []).map((r) => ({
-    username: r.username,
-    score: r.score,
-    levelReached: r.level_reached,
-    won: r.won,
-    date: r.date,
-    mode: 'daily' as const,
-  }))
+
+  // Sum scores per username over the 7 days
+  const totals = new Map<string, { score: number; levelReached: number; won: boolean; date: string }>()
+  for (const r of data ?? []) {
+    const existing = totals.get(r.username)
+    if (existing) {
+      existing.score += r.score
+      if (r.level_reached > existing.levelReached) existing.levelReached = r.level_reached
+      if (r.won) existing.won = true
+    } else {
+      totals.set(r.username, { score: r.score, levelReached: r.level_reached, won: r.won, date: r.date })
+    }
+  }
+
+  return Array.from(totals.entries())
+    .map(([username, v]) => ({ username, score: v.score, levelReached: v.levelReached, won: v.won, date: v.date, mode: 'daily' as const }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 20)
 }
 
 export function loadAll(): ScoreEntry[] {
