@@ -112,7 +112,14 @@ export default function LandingScreen({ onFreePlay, onDailyChallenge, onLeaderbo
 
         <button
           className={`landing-btn daily ${doneToday ? 'done' : ''}`}
-          onClick={() => !doneToday && onDailyChallenge(save(username))}
+          onClick={() => {
+            if (doneToday) return
+            if (!username.trim()) {
+              alert('Please enter your name to play the Daily Challenge!')
+              return
+            }
+            onDailyChallenge(save(username))
+          }}
         >
           {doneToday ? (
             <>📅 DAILY DONE — {todayResult?.score ?? 0} PTS</>
