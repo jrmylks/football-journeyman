@@ -26,6 +26,37 @@ export function saveScore(entry: Omit<ScoreEntry, 'date'>) {
   localStorage.setItem(SCORES_KEY, JSON.stringify(all))
 }
 
+export async function saveScoreGlobal(entry: Omit<ScoreEntry, 'date'>) {
+  const { supabase } = await import('../lib/supabase')
+  const today = new Date().toISOString().slice(0, 10)
+  await supabase.from('scores').insert({
+    username: entry.username,
+    score: entry.score,
+    level_reached: entry.levelReached,
+    won: entry.won,
+    date: today,
+  })
+}
+
+export async function loadGlobalDaily(): Promise<ScoreEntry[]> {
+  const { supabase } = await import('../lib/supabase')
+  const today = new Date().toISOString().slice(0, 10)
+  const { data } = await supabase
+    .from('scores')
+    .select('*')
+    .eq('date', today)
+    .order('score', { ascending: false })
+    .limit(20)
+  return (data ?? []).map((r) => ({
+    username: r.username,
+    score: r.score,
+    levelReached: r.level_reached,
+    won: r.won,
+    date: r.date,
+    mode: 'daily' as const,
+  }))
+}
+
 export function loadAll(): ScoreEntry[] {
   try {
     return JSON.parse(localStorage.getItem(SCORES_KEY) ?? '[]')

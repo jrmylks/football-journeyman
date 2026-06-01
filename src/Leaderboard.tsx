@@ -1,5 +1,6 @@
-import { useState } from 'react'
-import { loadDaily, loadWeekly } from './data/leaderboard'
+import { useState, useEffect } from 'react'
+import { loadDaily, loadWeekly, loadGlobalDaily } from './data/leaderboard'
+import type { ScoreEntry } from './data/leaderboard'
 import './Leaderboard.css'
 
 interface Props {
@@ -9,9 +10,19 @@ interface Props {
 const MEDALS = ['🥇', '🥈', '🥉']
 
 export default function Leaderboard({ onBack }: Props) {
-  const [tab, setTab] = useState<'daily' | 'weekly'>('daily')
+  const [tab, setTab] = useState<'global' | 'daily' | 'weekly'>('global')
+  const [globalEntries, setGlobalEntries] = useState<ScoreEntry[]>([])
+  const [loadingGlobal, setLoadingGlobal] = useState(true)
 
-  const entries = tab === 'daily' ? loadDaily() : loadWeekly()
+  useEffect(() => {
+    loadGlobalDaily().then((data) => {
+      setGlobalEntries(data)
+      setLoadingGlobal(false)
+    })
+  }, [])
+
+  const localEntries = tab === 'daily' ? loadDaily() : loadWeekly()
+  const entries = tab === 'global' ? globalEntries : localEntries
 
   return (
     <div className="lb-app">
@@ -23,24 +34,34 @@ export default function Leaderboard({ onBack }: Props) {
       <div className="lb-card">
         <div className="lb-tabs">
           <button
+            className={`lb-tab ${tab === 'global' ? 'active' : ''}`}
+            onClick={() => setTab('global')}
+          >
+            🌍 GLOBAL
+          </button>
+          <button
             className={`lb-tab ${tab === 'daily' ? 'active' : ''}`}
             onClick={() => setTab('daily')}
           >
-            DAILY
+            MY TODAY
           </button>
           <button
             className={`lb-tab ${tab === 'weekly' ? 'active' : ''}`}
             onClick={() => setTab('weekly')}
           >
-            WEEKLY
+            MY WEEK
           </button>
         </div>
 
-        {entries.length === 0 ? (
-          <div className="lb-empty">No scores yet. Play a game!</div>
+        {tab === 'global' && loadingGlobal ? (
+          <div className="lb-empty">Loading...</div>
+        ) : entries.length === 0 ? (
+          <div className="lb-empty">
+            {tab === 'global' ? 'No daily scores yet today. Be the first!' : 'No scores yet. Play a game!'}
+          </div>
         ) : (
           <ol className="lb-list">
-            {entries.slice(0, 10).map((entry, i) => (
+            {entries.slice(0, 20).map((entry, i) => (
               <li key={i} className="lb-row">
                 <span className="lb-rank">{MEDALS[i] ?? `#${i + 1}`}</span>
                 <span className="lb-username">{entry.username}</span>

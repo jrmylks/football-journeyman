@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import type { Player } from './data/players'
-import { saveScore, updateStats } from './data/leaderboard'
+import { saveScore, saveScoreGlobal, updateStats } from './data/leaderboard'
 import { getDailyPlayers, getDailyDateKey, saveDailyResult } from './data/daily'
 import LandingScreen from './LandingScreen'
 import Leaderboard from './Leaderboard'
@@ -144,7 +144,10 @@ export default function App() {
   function triggerGameOver(currentScore: number, currentLevel: number, won: boolean, currentPlayer: typeof players[0], wasRevealed = false) {
     saveScore({ username, score: currentScore, levelReached: currentLevel, won, mode: isDaily ? 'daily' : 'free' })
     updateStats(currentScore, won)
-    if (isDaily) saveDailyResult(currentScore, currentLevel, won)
+    if (isDaily) {
+      saveDailyResult(currentScore, currentLevel, won)
+      saveScoreGlobal({ username, score: currentScore, levelReached: currentLevel, won, mode: 'daily' })
+    }
     trackGameOver(currentScore, currentLevel, won, isDaily ? 'daily' : 'free')
     setGameOver({ score: currentScore, level: currentLevel, won, correctAnswer: currentPlayer.name, wasRevealed })
     setScreen('game-over')
