@@ -393,6 +393,7 @@ export default function App() {
           {player.clubs.slice(0, clubsShown).map((club, i) => (
             <li key={i}>
               <span className="club-num">[{i + 1}]</span> {club}
+              {i === 0 && player.debutYear ? ` (${player.debutYear})` : ''}
             </li>
           ))}
         </ol>

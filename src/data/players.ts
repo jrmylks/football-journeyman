@@ -3,6 +3,7 @@ export interface Player {
   name: string
   level: 1 | 2 | 3 | 4 | 5
   clubs: string[]
+  debutYear?: number
 }
 
 export const players: Player[] = [
