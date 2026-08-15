@@ -11,6 +11,7 @@ import './App.css'
 
 const WINS_TO_ADVANCE: Record<number, number> = { 1: 3, 2: 3, 3: 2, 4: 2, 5: 1 }
 const MAX_LEVEL = 5
+const MAX_LIVES = 3
 const TIMER_START = 18
 const TIMER_BONUS = 10
 const TIMER_MAX = 28
@@ -246,6 +247,7 @@ export default function App() {
           const nextLevel = level + 1
           trackLevelUp(nextLevel)
           setLevel(nextLevel)
+          if (nextLevel === 3) setLives((l) => Math.min(l + 1, MAX_LIVES))
           setWinsThisLevel(0)
           setTimeout(() => loadNextPlayer(nextLevel), 1200)
         }
@@ -378,7 +380,7 @@ export default function App() {
           <div className="badge-score">SCORE: {score}</div>
           <div className="badge-level">LVL {level} &nbsp;{winsThisLevel}/{needed}</div>
           <div className={`badge-lives ${lives === 1 ? 'one-life' : ''}`}>
-            {lives === 2 ? '❤️❤️' : '❤️'}
+            {'❤️'.repeat(lives)}
           </div>
         </div>
         {isDaily && <div className="daily-banner">📅 DAILY CHALLENGE</div>}
