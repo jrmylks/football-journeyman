@@ -23,7 +23,7 @@ function maxPointsForLevel(level: number): number {
 function calcPoints(timeLeft: number, clubsShown: number, level: number): number {
   const max = maxPointsForLevel(level)
   const timeScore = (Math.max(timeLeft, 0) / TIMER_START) * max
-  const clubPenalty = (clubsShown - 3) * max * 0.2
+  const clubPenalty = (clubsShown - 1) * max * 0.2
   return Math.max(Math.round(timeScore - clubPenalty), 5)
 }
 
@@ -119,7 +119,7 @@ export default function App() {
   const [score, setScore] = useState(0)
   const [lives, setLives] = useState(2)
   const [player, setPlayer] = useState(players[0])
-  const [clubsShown, setClubsShown] = useState(3)
+  const [clubsShown, setClubsShown] = useState(1)
   const [guess, setGuess] = useState('')
   const [result, setResult] = useState<'correct' | 'wrong' | 'close' | null>(null)
   const [timeLeft, setTimeLeft] = useState(TIMER_START)
@@ -152,7 +152,7 @@ export default function App() {
     setWinsThisLevel(0)
     setScore(0)
     setLives(2)
-    setClubsShown(3)
+    setClubsShown(1)
     setGuess('')
     setResult(null)
     setTimeLeft(TIMER_START)
@@ -182,7 +182,7 @@ export default function App() {
       usedIds.current.add(next.id)
     }
     setPlayer(next)
-    setClubsShown(3)
+    setClubsShown(1)
     setGuess('')
     setResult(null)
     setTimeLeft(TIMER_START)
