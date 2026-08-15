@@ -72,6 +72,21 @@ function isCorrectGuess(guess: string, playerName: string): boolean {
   return false
 }
 
+function arraysEqual(a: string[], b: string[]): boolean {
+  return a.length === b.length && a.every((item, i) => item === b[i])
+}
+
+// A "twin" is a different real player with the exact same club career (same
+// clubs, same order). Naming the twin instead of the answer is forgiven.
+function matchesTwin(guess: string, currentPlayer: Player, allPlayers: Player[]): boolean {
+  return allPlayers.some(
+    (p) =>
+      p.id !== currentPlayer.id &&
+      isCorrectGuess(guess, p.name) &&
+      arraysEqual(p.clubs, currentPlayer.clubs),
+  )
+}
+
 type Screen = 'landing' | 'leaderboard' | 'stats' | 'game' | 'game-over'
 
 interface GameOverState {
@@ -105,7 +120,7 @@ export default function App() {
   const [player, setPlayer] = useState(players[0])
   const [clubsShown, setClubsShown] = useState(3)
   const [guess, setGuess] = useState('')
-  const [result, setResult] = useState<'correct' | 'wrong' | null>(null)
+  const [result, setResult] = useState<'correct' | 'wrong' | 'close' | null>(null)
   const [timeLeft, setTimeLeft] = useState(TIMER_START)
 
   // Daily: fixed ordered queue
@@ -238,6 +253,11 @@ export default function App() {
         setTimeout(() => loadNextPlayer(level), 1200)
       }
     } else {
+      if (matchesTwin(guess, player, players)) {
+        setResult('close')
+        setGuess('')
+        return
+      }
       const remaining = lives - 1
       setLives(remaining)
       trackWrongGuess(level)
@@ -408,6 +428,10 @@ export default function App() {
 
         {result === 'wrong' && (
           <div className="feedback wrong">✗ WRONG! — 1 LIFE REMAINING. TRY AGAIN!</div>
+        )}
+
+        {result === 'close' && (
+          <div className="feedback close">🤔 Same clubs as another player! No life lost — try again.</div>
         )}
 
         {!isCorrect && canRevealMore && (
