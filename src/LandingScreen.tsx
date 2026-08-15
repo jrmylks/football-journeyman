@@ -13,6 +13,7 @@ function InstructionsModal({ onClose }: { onClose: () => void }) {
           <ul>
             <li>You start with <strong>3 clubs</strong> shown and a <strong>15 second timer</strong>.</li>
             <li>Type the player's <strong>full name or surname</strong> and hit GUESS.</li>
+            <li>It's a race against the clock, so a single spelling slip is forgiven.</li>
             <li>A correct guess earns points — the faster and fewer clubs shown, the more you score.</li>
             <li>You have <strong>2 lives</strong>. A wrong guess or running out of time costs a life.</li>
             <li>Hit <strong>REVEAL NEXT CLUB</strong> to see another club and add 10 seconds — but your potential points drop.</li>

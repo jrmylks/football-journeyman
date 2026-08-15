@@ -35,10 +35,41 @@ function normalise(s: string): string {
   return s.trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
 }
 
+// Levenshtein distance between two strings (used to allow one-character typos).
+function editDistance(a: string, b: string): number {
+  const m = a.length
+  const n = b.length
+  let prev = Array.from({ length: n + 1 }, (_, i) => i)
+  let curr = new Array<number>(n + 1)
+  for (let i = 1; i <= m; i++) {
+    curr[0] = i
+    for (let j = 1; j <= n; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1
+      curr[j] = Math.min(
+        prev[j] + 1,        // deletion
+        curr[j - 1] + 1,    // insertion
+        prev[j - 1] + cost, // substitution
+      )
+    }
+    ;[prev, curr] = [curr, prev]
+  }
+  return prev[n]
+}
+
 function isCorrectGuess(guess: string, playerName: string): boolean {
-  if (normalise(guess) === normalise(playerName)) return true
-  const lastName = normalise(playerName).split(' ').at(-1) ?? ''
-  return lastName.length >= 3 && normalise(guess) === lastName
+  const g = normalise(guess)
+  const words = normalise(playerName).split(' ')
+
+  // Accept any trailing word-chunk of the name: "Edwin van der Sar" ->
+  // "van der sar" / "der sar" / "sar" (plus the full name). Leading/middle
+  // particles like "van" or "der" are never generated on their own.
+  for (let i = 0; i < words.length; i++) {
+    const candidate = words.slice(i).join(' ')
+    if (candidate.length >= 3 && g === candidate) return true
+    if (candidate.length >= 5 && editDistance(g, candidate) <= 1) return true
+  }
+
+  return false
 }
 
 type Screen = 'landing' | 'leaderboard' | 'stats' | 'game' | 'game-over'
