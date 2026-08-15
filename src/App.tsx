@@ -11,9 +11,9 @@ import './App.css'
 
 const WINS_TO_ADVANCE: Record<number, number> = { 1: 3, 2: 3, 3: 2, 4: 2, 5: 1 }
 const MAX_LEVEL = 5
-const TIMER_START = 15
+const TIMER_START = 18
 const TIMER_BONUS = 10
-const TIMER_MAX = 20
+const TIMER_MAX = 28
 
 function maxPointsForLevel(level: number): number {
   return 25 + level * 25
