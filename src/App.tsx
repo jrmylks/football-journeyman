@@ -120,6 +120,7 @@ export default function App() {
   const [lives, setLives] = useState(2)
   const [player, setPlayer] = useState(players[0])
   const [clubsShown, setClubsShown] = useState(1)
+  const [positionRevealed, setPositionRevealed] = useState(false)
   const [guess, setGuess] = useState('')
   const [result, setResult] = useState<'correct' | 'wrong' | 'close' | null>(null)
   const [timeLeft, setTimeLeft] = useState(TIMER_START)
@@ -153,6 +154,7 @@ export default function App() {
     setScore(0)
     setLives(2)
     setClubsShown(1)
+    setPositionRevealed(false)
     setGuess('')
     setResult(null)
     setTimeLeft(TIMER_START)
@@ -183,6 +185,7 @@ export default function App() {
     }
     setPlayer(next)
     setClubsShown(1)
+    setPositionRevealed(false)
     setGuess('')
     setResult(null)
     setTimeLeft(TIMER_START)
@@ -430,7 +433,7 @@ export default function App() {
         )}
 
         {result === 'wrong' && (
-          <div className="feedback wrong">✗ WRONG! — 1 LIFE REMAINING. TRY AGAIN!</div>
+          <div className="feedback wrong">✗ WRONG! — {lives} {lives === 1 ? 'LIFE' : 'LIVES'} REMAINING. TRY AGAIN!</div>
         )}
 
         {result === 'close' && (
@@ -441,6 +444,15 @@ export default function App() {
           <button className="secondary" onClick={handleReveal}>
             REVEAL NEXT CLUB (+{TIMER_BONUS}s)
           </button>
+        )}
+
+        {!isCorrect && !canRevealMore && !positionRevealed && player.position && (
+          <button className="secondary" onClick={() => setPositionRevealed(true)}>
+            REVEAL POSITION
+          </button>
+        )}
+        {positionRevealed && player.position && (
+          <div className="position-clue">📍 Position: {player.position}</div>
         )}
       </div>
     </div>

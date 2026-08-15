@@ -4,6 +4,7 @@ export interface Player {
   level: 1 | 2 | 3 | 4 | 5
   clubs: string[]
   debutYear?: number
+  position?: string
 }
 
 export const players: Player[] = [

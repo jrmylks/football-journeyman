@@ -267,6 +267,18 @@ button.secondary {
   border-color: #8a6d16;
 }
 
+.position-clue {
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 10px 14px;
+  border: 3px solid #2b6cb0;
+  border-radius: 8px;
+  text-align: center;
+  background: #dbeafe;
+  color: #2b6cb0;
+}
+
 /* ── Actions ── */
 .actions {
   display: flex;
