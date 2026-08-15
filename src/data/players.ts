@@ -621,12 +621,6 @@ export const players: Player[] = [
     clubs: ['Bendel Insurance', 'Lokomotiv Moscow', 'Lille', 'West Bromwich Albion', 'Cardiff City', 'Stoke City', 'Bristol City', 'Madura United'],
   },
   {
-    id: 'ibisevic',
-    name: 'Vedad Ibišević',
-    level: 5,
-    clubs: ['Saint Louis Unniversity', 'Paris Saint-Germain', 'AC Ajaccio', 'Dijon', '1899 Hoffenheim', 'Lokomotiv Moscow', 'Hannover 96', 'Schalke 04', 'Stuttgart', 'Hertha Berlin'],
-  },
-  {
     id: 'benni-mccarthy',
     name: 'Benni McCarthy',
     level: 5,
@@ -697,12 +691,6 @@ export const players: Player[] = [
     name: 'Wes Brown',
     level: 5,
     clubs: ['Manchester United', 'Sunderland', 'Blackburn Rovers'],
-  },
-  {
-    id: 'lassina-diabate',
-    name: 'Aliou Diatta',
-    level: 5,
-    clubs: ['Lens', 'Racing Santander', 'Blackburn Rovers', 'Sunderland'],
   },
   {
     id: 'nuno-gomes',
