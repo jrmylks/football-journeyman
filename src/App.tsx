@@ -112,6 +112,7 @@ export default function App() {
   const [screen, setScreen] = useState<Screen>('landing')
   const [username, setUsername] = useState('Anonymous')
   const [isDaily, setIsDaily] = useState(false)
+  const [englishOnly, setEnglishOnly] = useState(false)
 
   // Game state
   const [level, setLevel] = useState(1)
@@ -138,17 +139,20 @@ export default function App() {
   const usedIds = useRef<Set<string>>(new Set())
 
   function pickPlayer(lvl: number) {
-    const pool = players.filter((p) => p.level === lvl && !usedIds.current.has(p.id))
+    const eligible = players.filter((p) => p.level === lvl && (!englishOnly || p.englishFootball))
+    const safeEligible = eligible.length > 0 ? eligible : players.filter((p) => p.level === lvl)
+    const pool = safeEligible.filter((p) => !usedIds.current.has(p.id))
     if (pool.length === 0) {
-      players.filter((p) => p.level === lvl).forEach((p) => usedIds.current.delete(p.id))
-      return pickRandom(players.filter((p) => p.level === (lvl as 1|2|3|4|5)))
+      safeEligible.forEach((p) => usedIds.current.delete(p.id))
+      return pickRandom(safeEligible)
     }
     return pickRandom(pool)
   }
 
-  function initGame(name: string, daily: boolean) {
+  function initGame(name: string, daily: boolean, english: boolean) {
     setUsername(name)
     setIsDaily(daily)
+    setEnglishOnly(english)
     setLevel(1)
     setWinsThisLevel(0)
     setScore(0)
@@ -166,7 +170,9 @@ export default function App() {
       dailyIndex.current = 0
       setPlayer(queue[0])
     } else {
-      const first = pickPlayer(1)
+      const englishPool = players.filter((p) => p.level === 1 && (!english || p.englishFootball))
+      const firstPool = englishPool.length > 0 ? englishPool : players.filter((p) => p.level === 1)
+      const first = pickRandom(firstPool)
       usedIds.current.add(first.id)
       setPlayer(first)
     }
@@ -318,8 +324,8 @@ export default function App() {
   if (screen === 'landing') {
     return (
       <LandingScreen
-        onFreePlay={(name) => initGame(name, false)}
-        onDailyChallenge={(name) => initGame(name, true)}
+        onFreePlay={(name, english) => initGame(name, false, english)}
+        onDailyChallenge={(name, english) => initGame(name, true, english)}
         onLeaderboard={() => setScreen('leaderboard')}
         onStats={() => setScreen('stats')}
       />
@@ -357,7 +363,7 @@ export default function App() {
           </button>
 
           <div className="actions">
-            <button onClick={() => initGame(username, false)}>▶ FREE PLAY</button>
+            <button onClick={() => initGame(username, false, englishOnly)}>▶ FREE PLAY</button>
             <button className="secondary" onClick={() => setScreen('leaderboard')}>🏆 LEADERBOARD</button>
           </div>
           <button className="secondary" style={{ width: '100%' }} onClick={() => setScreen('landing')}>🏠 HOME</button>

@@ -40,8 +40,8 @@ function InstructionsModal({ onClose }: { onClose: () => void }) {
 }
 
 interface Props {
-  onFreePlay: (username: string) => void
-  onDailyChallenge: (username: string) => void
+  onFreePlay: (username: string, englishOnly: boolean) => void
+  onDailyChallenge: (username: string, englishOnly: boolean) => void
   onLeaderboard: () => void
   onStats: () => void
 }
@@ -55,6 +55,7 @@ export default function LandingScreen({ onFreePlay, onDailyChallenge, onLeaderbo
     () => localStorage.getItem('fj_username') ?? ''
   )
   const [showInstructions, setShowInstructions] = useState(false)
+  const [englishOnly, setEnglishOnly] = useState(false)
 
   const stats = loadStats()
   const todayResult = getTodayResult()
@@ -103,10 +104,16 @@ export default function LandingScreen({ onFreePlay, onDailyChallenge, onLeaderbo
           maxLength={20}
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && onFreePlay(save(username))}
+          onKeyDown={(e) => e.key === 'Enter' && onFreePlay(save(username), englishOnly)}
         />
 
-        <button className="landing-btn primary" onClick={() => onFreePlay(save(username))}>
+        <label className="mode-toggle">
+          <input type="checkbox" checked={englishOnly}
+                 onChange={(e) => setEnglishOnly(e.target.checked)} />
+          English football only
+        </label>
+
+        <button className="landing-btn primary" onClick={() => onFreePlay(save(username), englishOnly)}>
           ▶ FREE PLAY
         </button>
 
@@ -120,7 +127,7 @@ export default function LandingScreen({ onFreePlay, onDailyChallenge, onLeaderbo
               alert('Please enter your name to play the Daily Challenge!')
               return
             }
-            onDailyChallenge(save(username))
+            onDailyChallenge(save(username), englishOnly)
           }}
         >
           {doneToday ? (
