@@ -11,19 +11,21 @@ function InstructionsModal({ onClose }: { onClose: () => void }) {
         <div className="instructions-body">
           <p>Guess the football player from their club career.</p>
           <ul>
-            <li>You start with <strong>3 clubs</strong> shown and a <strong>15 second timer</strong>.</li>
+            <li>You start with just <strong>1 club</strong> shown (and the year they joined it) and an <strong>18 second timer</strong>.</li>
             <li>Type the player's <strong>full name or surname</strong> and hit GUESS.</li>
             <li>It's a race against the clock, so a single spelling slip is forgiven.</li>
             <li>If two players share the exact same clubs, naming the other one won't cost a life.</li>
-            <li>A correct guess earns points — the faster and fewer clubs shown, the more you score.</li>
-            <li>You have <strong>2 lives</strong>. A wrong guess or running out of time costs a life.</li>
-            <li>Hit <strong>REVEAL NEXT CLUB</strong> to see another club and add 10 seconds — but your potential points drop.</li>
+            <li>A correct guess earns points — the faster, and the fewer clubs revealed, the more you score.</li>
+            <li>You have <strong>2 lives</strong>, and earn a <strong>bonus life</strong> when you reach level 3. A wrong guess or running out of time costs a life.</li>
+            <li>Hit <strong>REVEAL NEXT CLUB</strong> to show another club and add 10 seconds — but your potential points drop.</li>
+            <li>Once every club is shown, <strong>REVEAL POSITION</strong> appears — a free clue showing what position the player played.</li>
             <li>Win enough rounds to advance through <strong>5 levels</strong> of difficulty.</li>
-            <li>Level 1 needs 3 wins, levels 2–3 need 3 wins, levels 4–5 need fewer — can you complete all 5?</li>
+            <li>Wins needed per level: <strong>3, 3, 2, 2, 1</strong> — can you complete all 5?</li>
           </ul>
           <div className="instructions-modes">
             <div><strong>▶ FREE PLAY</strong> — random players, play as many times as you like.</div>
             <div><strong>📅 DAILY CHALLENGE</strong> — one fixed set of players per day, same for everyone. Compare scores on the leaderboard!</div>
+            <div><strong>🏴 English football only</strong> — tick this before starting to limit players to anyone who played for an English club.</div>
           </div>
           <div className="instructions-levels">
             <div><strong>Level 1</strong> — Global icons</div>
