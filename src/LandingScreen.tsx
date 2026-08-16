@@ -16,7 +16,7 @@ function InstructionsModal({ onClose }: { onClose: () => void }) {
             <li>It's a race against the clock, so a single spelling slip is forgiven.</li>
             <li>If two players share the exact same clubs, naming the other one won't cost a life.</li>
             <li>A correct guess earns points — the faster, and the fewer clubs revealed, the more you score.</li>
-            <li>You have <strong>2 lives</strong>, and earn a <strong>bonus life</strong> when you reach level 3. A wrong guess or running out of time costs a life.</li>
+            <li>You start with <strong>2 lives</strong> and earn an <strong>extra life each time you complete a level</strong> (up to a maximum of 4). A wrong guess or running out of time costs a life.</li>
             <li>Hit <strong>REVEAL NEXT CLUB</strong> to show another club and add 10 seconds — but your potential points drop.</li>
             <li>Once every club is shown, <strong>REVEAL POSITION</strong> appears — a free clue showing what position the player played.</li>
             <li>Win enough rounds to advance through <strong>5 levels</strong> of difficulty.</li>
